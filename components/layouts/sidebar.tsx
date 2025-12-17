@@ -2,8 +2,10 @@
 
 import {
   LayoutDashboard,
-  Users,
-  FileText,
+  BookOpen,
+  UserCheck,
+  Heart,
+  MessageSquare,
   Settings,
   LogOut
 } from "lucide-react";
@@ -14,8 +16,10 @@ export default function Sidebar() {
 
   const menu = [
     { label: "Dashboard", icon: LayoutDashboard },
-    { label: "Utilisateurs", icon: Users },
-    { label: "Articles", icon: FileText },
+    { label: "Blogs & Articles", icon: BookOpen },
+    { label: "Candidatures", icon: UserCheck },
+    { label: "Collectes", icon: Heart },
+    { label: "Témoignages", icon: MessageSquare },
     { label: "Paramètres", icon: Settings },
   ];
 
@@ -23,7 +27,7 @@ export default function Sidebar() {
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm">
       
       {/* Logo */}
-      <div className="h-20 flex items-center justify-center border-b border-gray-200">
+      <div className="h-16 flex items-center justify-center border-b border-gray-200">
         <span className="font-display text-2xl font-bold text-gray-600">
           Vipho Admin
         </span>
