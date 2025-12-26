@@ -1,70 +1,54 @@
 "use client";
 
-import {
-  LayoutDashboard,
-  Users,
-  FileText,
-  Settings,
-  LogOut
-} from "lucide-react";
 import { useState } from "react";
+import { Input, Textarea, Select, ImageUpload } from "@/components/ui";
 import Header from "../../components/layouts/header";
 
 export default function TestPage() {
-  const [active, setActive] = useState("Dashboard");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    description: "",
+    category: "",
+    image: undefined as File | undefined,
+  });
 
-  const menu = [
-    { label: "Dashboard", icon: LayoutDashboard },
-    { label: "Utilisateurs", icon: Users },
-    { label: "Articles", icon: FileText },
-    { label: "Paramètres", icon: Settings },
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const categories = [
+    { value: "education", label: "Éducation" },
+    { value: "sante", label: "Santé" },
+    { value: "environnement", label: "Environnement" },
+    { value: "social", label: "Social" },
   ];
+
+  const handleInputChange = (field: string, value: string | File | undefined) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) newErrors.name = "Le nom est requis";
+    if (!formData.email.trim()) newErrors.email = "L'email est requis";
+    if (!formData.description.trim()) newErrors.description = "La description est requise";
+    if (!formData.category) newErrors.category = "La catégorie est requise";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      console.log("Form submitted:", formData);
+      alert("Formulaire soumis avec succès !");
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm">
-
-        {/* Logo */}
-        <div className="h-16 flex items-center justify-center border-b border-gray-200">
-          <span className="font-display text-2xl font-bold text-gray-600">
-            Vipho Admin
-          </span>
-        </div>
-
-        {/* Menu */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          {menu.map((item) => {
-            const Icon = item.icon;
-            const isActive = active === item.label;
-            return (
-              <button
-                key={item.label}
-                onClick={() => setActive(item.label)}
-                className={`
-                  w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium
-                  transition-colors duration-200
-                  ${isActive
-                    ? "bg-primary-100 text-primary-700 shadow-inner"
-                    : "text-gray-700 hover:bg-gray-100"}
-                `}
-              >
-                <Icon size={20} className={`${isActive ? "text-primary-700" : "text-gray-500"}`} />
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-200">
-          <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition">
-            <LogOut size={20} />
-            Déconnexion
-          </button>
-        </div>
-      </aside>
-
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
@@ -73,18 +57,79 @@ export default function TestPage() {
         {/* Page Content */}
         <main className="flex-1 overflow-auto">
           <div className="p-8">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-2xl mx-auto">
               <h1 className="text-3xl font-bold text-gray-900 mb-8">
-                {active}
+                Test des Composants UI
               </h1>
 
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-                <p className="text-gray-600 text-lg">
-                  Page {active} - Interface d'administration Vipho
-                </p>
-                <p className="text-gray-500 mt-4">
-                  Cette page démontre l'intégration de la sidebar et du header avec navigation interactive.
-                </p>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <Input
+                    label="Nom"
+                    placeholder="Entrez votre nom"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
+                    error={errors.name}
+                  />
+
+                  <Input
+                    label="Email"
+                    type="email"
+                    placeholder="Entrez votre email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    error={errors.email}
+                  />
+
+                  <Textarea
+                    label="Description"
+                    placeholder="Entrez une description détaillée"
+                    value={formData.description}
+                    onChange={(e) => handleInputChange("description", e.target.value)}
+                    error={errors.description}
+                    rows={4}
+                  />
+
+                  <Select
+                    label="Catégorie"
+                    placeholder="Sélectionnez une catégorie"
+                    options={categories}
+                    value={formData.category}
+                    onValueChange={(value) => handleInputChange("category", value)}
+                    error={errors.category}
+                  />
+
+                  <ImageUpload
+                    label="Image"
+                    value={formData.image}
+                    onChange={(file) => handleInputChange("image", file)}
+                  />
+
+                  <div className="flex gap-4">
+                    <button
+                      type="submit"
+                      className="bg-primary-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors"
+                    >
+                      Soumettre
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({
+                          name: "",
+                          email: "",
+                          description: "",
+                          category: "",
+                          image: undefined,
+                        });
+                        setErrors({});
+                      }}
+                      className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                    >
+                      Réinitialiser
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
