@@ -32,7 +32,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
             {label}
           </label>
         )}
-        <div className="relative">
+        <div className={cn("relative", isOpen && "z-50")}>
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
@@ -50,7 +50,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
           </button>
 
           {isOpen && (
-            <div className="absolute z-10 mt-1 max-h-60 min-w-32 w-full overflow-auto rounded-md border border-gray-200 bg-white py-1 shadow-lg">
+            <div className="absolute z-50 mt-1 max-h-60 min-w-32 w-full overflow-auto rounded-md border border-gray-200 bg-white py-1 shadow-lg">
               {options.map((option) => (
                 <button
                   key={option.value}
