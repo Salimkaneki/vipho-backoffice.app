@@ -175,9 +175,9 @@ export default function TemoignagesPage() {
       </div>
 
       {/* Liste des témoignages */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         {filteredTemoignages.length === 0 ? (
-          <div className="col-span-full p-12 text-center bg-white rounded-2xl shadow-sm border border-gray-100">
+          <div className="p-12 text-center">
             <div className="text-gray-400 mb-4">
               <User className="h-12 w-12 mx-auto" />
             </div>
@@ -198,9 +198,11 @@ export default function TemoignagesPage() {
             </Link>
           </div>
         ) : (
-          filteredTemoignages.map((temoignage) => (
-            <TemoignageCard key={temoignage.id} temoignage={temoignage} />
-          ))
+          <div className="divide-y divide-gray-100">
+            {filteredTemoignages.map((temoignage) => (
+              <TemoignageCard key={temoignage.id} temoignage={temoignage} />
+            ))}
+          </div>
         )}
       </div>
     </div>
